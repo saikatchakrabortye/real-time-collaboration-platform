@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+          }
+          table {
+            width: 100%;
+            height: 100vh;
+            border-collapse: collapse;
+          }
+          td {
+            padding: 10px;
+          }
+          #first-column {
+            width: 60%;
+            background-color: #F1E4C3;
+          }
+          #third-column {
+            width: 40%;
+            background-color: #FFFFEC;
+          }
+          h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #FF9843;
+            font-family: sans-serif;
+            
+          }
+          p {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-family: sans-serif;
+            color: #FF9843;
+          }
+          b {
+          color: #FF9843;
+          font-size: 28px;
+          }
+          iframe {
+            width: 560;
+            height: 315;
+          }
+          .buttonTheme {
+            padding:  10px 10px 10px 10px;
+            margin-right: 10px;
+            background-color: #7FC7D9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            width: 180px; height: 50px; font-size: 1.2rem;
+          }
+          .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      
+      .vertical-flex {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .horizontal-flex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      
+      .buttonTheme:hover {
+        background-color: #525CEB;
+      }
+      label {
+        font-family: sans-serif;
+        color: black;
+        font-size: 24px;
+        padding: 10px;
+        margin: 10px;
+      }
+  
+      input {
+        padding: 10px;
+        margin: 10px;
+        font-family: sans-serif;
+        border-radius: 5px;
+      }
+  
+      
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+          <td id="first-column">
+          <div class="container">
+                <div class="vertical-flex">
+            <h1 style="font-size: 48px; color: #FF9843">Real Time Notes Distribution & Collaboration Platform.</h1>
+            <p>Platform for Students & Teachers to <b> create, <br> collaborate and share </b> their Notes to <b>individual</b> or <b>group</b> in real time</p>
+           
+            </div>
+            </div>
+          </td>
+          <td id="third-column">
+            <div class="container">
+                <div class="vertical-flex">
+                    <h1 style="color: black; font-family:sans-serif">Enter User Details</h1>
+                    <form action="#" th:action="@{/u/postsignin}" th:object="${user}" method="post">
+            
+                        <label for="username">Username:</label>
+                        <input type="text" th:field="*{username}" id="username" name="username" required>
+                        <br>
+                        <label for="password">Password:</label>
+                         <input type="password" th:field="*{password}" id="password" name="password" required>
+                         <br>
+                    <div class="horizontal-flex">
+                        <input type="submit" value="Login" class="buttonTheme">
+                        <input type="reset" value="Reset" class="buttonTheme" />
+                    </div>
+                    </form>
+                    <!--Display error message if unsuccessful-->
+                    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; font-size:20px; font-family: sans-serif"></span>
+                    <p>New User? <a href="/u/signup"><b>Register Now</b></a></p>
+                </div>
+                </div>
+    
+          </td>
+        </tr>
+      </table>
+      
+</body>
+</html>

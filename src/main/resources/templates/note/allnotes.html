@@ -1,0 +1,266 @@
+<!-- viewall.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View All Notes</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@7.0.0/bundles/stomp.umd.min.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+          }
+          table {
+            width: 100%;
+            height: 100vh;
+            border-collapse: collapse;
+          }
+          td {
+            padding: 10px;
+          }
+          #first-column {
+            width: 60%;
+            background-color: #F1E4C3;
+          }
+          #third-column {
+            width: 40%;
+            background-color: #FFFFEC;
+          }
+          h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #FF9843;
+            font-family: sans-serif;
+            
+          }
+          p {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-family: sans-serif;
+            color: #FF9843;
+          }
+          b {
+          color: #FF9843;
+          font-size: 28px;
+          }
+          iframe {
+            width: 560;
+            height: 315;
+          }
+          .buttonTheme {
+            padding:  10px 10px 10px 10px;
+            margin-right: 10px;
+            background-color: #7FC7D9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            width: 180px; height: 50px; font-size: 1.2rem;
+          }
+          .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+      
+      .vertical-flex {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .horizontal-flex {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      
+      .buttonTheme:hover {
+        background-color: #525CEB;
+      }
+      label {
+        font-family: sans-serif;
+        color: black;
+        font-size: 24px;
+        padding: 10px;
+        margin: 10px;
+      }
+  
+      input {
+        padding: 10px;
+        margin: 10px;
+        font-family: sans-serif;
+        border-radius: 5px;
+      }
+  
+      
+    </style>
+</head>
+<body>
+  <noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+    <table>
+        <tr>
+          <td id="first-column">
+          <div class="container">
+                <div class="vertical-flex">
+            <h1 th:text="${nameOfUser}" style="font-size: 48px; color: #FF9843">All Notes</h1>
+            
+            <table>
+        
+                <tbody>
+                     <!-- Check if the list is empty -->
+            <if th:if="${#lists.isEmpty(list)}">
+                <p>Empty Notes. Add Notes</p>
+            </if>
+                    <!-- Loop through the list of notes -->
+                    <tr th:each="note, iter : ${list}">
+                        
+                        
+                        <td>    
+                            <!-- Add an update button for each note -->
+                            <form th:action="@{/update}" method="post">
+                                <input type="hidden" name="id" th:value="${iter.index}">
+                                <input type="text" id="ntitle" name="title" th:value="${note.title}">
+                                <input type="text" id="ndescription" name="description" th:value="${note.description}">
+    
+                      
+                                <input type="submit" value="Update">
+                            </form>
+                        </td>
+                        <td>
+                            <!-- Add a delete button for each note -->
+                            <form th:action="@{/delete}" method="post">
+                                <input type="hidden" name="id" th:value="${iter.index}">
+                                <input type="submit" value="Delete">
+                            </form></td>
+                            <td>
+                              <!-- Add Share With button for each note -->
+                              <!--<form th:action="@{/share}" method="post">-->
+                                  <!--<input type="hidden" name="id" th:value="${iter.index}">-->
+                                  <!--<select name="groupSelection" id="class">
+                                    <option value="Select">Select</option>
+                                    <option value="One">One</option>
+                                    <option value="Two">Two</option>
+                                    <option value="Three">Three</option>
+                                    <option value="Four">Four</option>
+                                    <option value="Five">Five</option>
+                                    <option value="Six">Six</option>
+                                    <option value="Seven">Seven</option>
+                                    <option value="Eight">Eight</option>
+                                    <option value="Nine">Nine</option>
+                                    <option value="Ten">Ten</option>
+                                    <option value="Eleven">Eleven</option>
+                                    <option value="Twelve">Twelve</option>
+                                  </select>-->
+                                  <input id="share-${iter.index}" type="submit" value="Share">
+                              <!--</form>-->
+                            </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+            </div>
+          </td>
+          <td id="third-column">
+            <div class="container">
+                <div class="vertical-flex">
+                    <h1 style="color: black; font-family:sans-serif">Create a new note</h1>
+                    <form action="#" th:action="@{/addnote}" th:object="${note}" method="post">
+                        <label for="title">Note Title:</label>
+                        <input type="text" th:field="*{title}" id="title" name="title" required>
+                        
+                        <br>
+                        
+                        <label for="description">Note Description:</label>
+                        <textarea id="descriptionTextArea" th:field="*{description}" name="description" rows="25" cols="50" required></textarea>
+                        
+                        <br>
+                        <div class="horizontal-flex">
+                        <input type="submit" value="Submit" class="buttonTheme">
+                        <input type="reset" value="Reset" class="buttonTheme" />
+                    </div>
+                    </form>
+                    <!--Display error message if unsuccessful-->
+                    <span th:if="${errorMessage}" th:text="${errorMessage}" style="color: red; font-size:20px; font-family: sans-serif"></span>
+                    <!--Logout button-->
+                     <form th:action="@{/logout}" method="post">
+                     <input id="logout" type="submit" value="Logout">
+                     </form>
+                     <!--Hidden form to save shared note-->
+                     <form action="#" id="saveSharedNoteForm" th:action="@{/addnote}" th:object="${note}" method="post">
+                      <input type="hidden" id="sharedTitle" th:field="*{title}" name="sharedTitle">
+                      <input type="hidden" id="sharedDescription" th:field="*{description}" name="sharedDescription"></input>
+                      <input type="hidden" id="sharedByUsername" th:field="*{sharedBy}"  name="sharedBy">
+                      </form>
+                </div>
+                </div>
+    
+          </td>
+        </tr>
+        
+      </table>
+      <script>
+        
+        const stompClient = new StompJs.Client({
+          brokerURL: 'ws://localhost:8080/notes-websocket'
+      });
+      window.onload=function()
+      {
+        stompClient.activate();
+      };
+      
+      stompClient.onConnect = (frame) => { // Arrow function
+        stompClient.subscribe('/topic/all',  (greeting) => {
+          showNote(JSON.parse(greeting.body).senderUsername,
+          JSON.parse(greeting.body).title,
+          JSON.parse(greeting.body).description,
+          JSON.parse(greeting.body).groupToShare); //This part is executed whenever server broadcasts to its subscribers
+      });
+    };
+
+   
+    function disconnect() {
+      stompClient.deactivate();
+      setConnected(false);
+      console.log("Disconnected");
+  }
+    function sendPacket() {
+      const packet= {senderUsername : "saikat", groupToShare: "ten", title: "This is title", description:"description text"};
+      packet.title=document.getElementById("ntitle").value;
+      packet.description=document.getElementById("ndescription").value;
+
+      stompClient.publish({
+          destination: "/app/receiver",
+      
+          body: JSON.stringify(packet) // Converts a javascript value or object to json
+          //body: JSON.stringify({'name': $("#description").val()})
+          //senderUsername, groupToShare, title, description
+      });
+  }
+ 
+  
+  function showNote(senderUsername, title, description, groupToShare) {
+    
+    //$("#greetings").append("<tr><td>" + senderUsername + " " + title + " " + description + " " + groupToShare + "</td></tr>");
+    document.getElementById("sharedTitle").value = title;
+    document.getElementById("sharedDescription").value = description;
+    document.getElementById("sharedByUsername").value = senderUsername;
+    document.getElementById("saveSharedNoteForm").submit();
+    
+}
+
+  $(function () {
+    $("input[id^='share-']").click(() => sendPacket());
+    $("#logout").click(() => disconnect());
+});
+      </script>
+</body>
+</html>
